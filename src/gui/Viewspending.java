@@ -4,6 +4,13 @@
  */
 package gui;
 
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.*;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Hazem
@@ -13,9 +20,39 @@ public class Viewspending extends javax.swing.JFrame {
     /**
      * Creates new form Viewspending
      */
+    Connection con;
+    DefaultTableModel dtm = new DefaultTableModel();
+
     public Viewspending() {
         initComponents();
         this.setLocationRelativeTo(null);
+        dtm.addColumn("Date");
+        dtm.addColumn("Category");
+        dtm.addColumn("Amount");
+        Text_Date_from_s.setDate(new java.util.Date());
+        Text_Date_to_s.setDate(new java.util.Date());
+
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "root");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error Connectoin");
+        }
+        fillComboBox();
+    }
+
+    private void fillComboBox() {
+        try {
+            comboBox_category.removeAllItems();
+            PreparedStatement st = con.prepareStatement("select category from category_info");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+
+                comboBox_category.addItem(rs.getString(1));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error In Combo Box");
+        }
     }
 
     /**
@@ -32,25 +69,29 @@ public class Viewspending extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        search_s = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        Table_s = new javax.swing.JTable();
+        totalAmount = new javax.swing.JLabel();
+        total_s = new javax.swing.JLabel();
+        Text_Date_from_s = new com.toedter.calendar.JDateChooser();
+        Text_Date_to_s = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        search_c = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        Table_c = new javax.swing.JTable();
+        totalamount = new javax.swing.JLabel();
+        total_c = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comboBox_category = new javax.swing.JComboBox<>();
+        Text_Date_from_c = new com.toedter.calendar.JDateChooser();
+        Text_Date_to_c = new com.toedter.calendar.JDateChooser();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("View spending");
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 0));
@@ -82,10 +123,15 @@ public class Viewspending extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Nirmala UI", 1, 14)); // NOI18N
         jLabel3.setText("To:");
 
-        jButton1.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
-        jButton1.setText("Search");
+        search_s.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
+        search_s.setText("Search");
+        search_s.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                search_sActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Table_s.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -101,13 +147,25 @@ public class Viewspending extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        Table_s.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(Table_s);
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setText("Total Amount:");
+        totalAmount.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        totalAmount.setText("Total Amount:");
 
-        jLabel5.setText("0");
+        total_s.setText("0");
+
+        Text_Date_from_s.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                Text_Date_from_sPropertyChange(evt);
+            }
+        });
+
+        Text_Date_to_s.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                Text_Date_to_sPropertyChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -117,21 +175,25 @@ public class Viewspending extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jButton1)
-                                    .addGap(28, 28, 28)
-                                    .addComponent(jLabel4)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Text_Date_from_s, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Text_Date_to_s, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(search_s)
+                                .addGap(18, 18, 18)
+                                .addComponent(totalAmount)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(total_s, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,14 +201,18 @@ public class Viewspending extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
-                .addComponent(jLabel2)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(Text_Date_from_s, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(Text_Date_to_s, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                    .addComponent(search_s)
+                    .addComponent(totalAmount)
+                    .addComponent(total_s))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
                 .addContainerGap())
@@ -181,10 +247,15 @@ public class Viewspending extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Nirmala UI", 1, 14)); // NOI18N
         jLabel8.setText("To:");
 
-        jButton2.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
-        jButton2.setText("Search");
+        search_c.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
+        search_c.setText("Search");
+        search_c.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                search_cActionPerformed(evt);
+            }
+        });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        Table_c.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -200,16 +271,22 @@ public class Viewspending extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable2.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jTable2);
+        Table_c.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(Table_c);
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setText("Total Amount:");
+        totalamount.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        totalamount.setText("Total Amount:");
 
-        jLabel10.setText("0");
+        total_c.setText("0");
 
         jLabel11.setFont(new java.awt.Font("Nirmala UI", 1, 14)); // NOI18N
         jLabel11.setText("Category");
+
+        comboBox_category.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBox_categoryActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -222,18 +299,24 @@ public class Viewspending extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addGap(1, 1, 1)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(comboBox_category, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Text_Date_from_c, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Text_Date_to_c, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jButton2)
+                                .addComponent(search_c)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(totalamount)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(total_c, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -245,16 +328,20 @@ public class Viewspending extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboBox_category, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel7)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
+                    .addComponent(Text_Date_from_c, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8)
+                    .addComponent(Text_Date_to_c, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10))
+                    .addComponent(search_c)
+                    .addComponent(totalamount)
+                    .addComponent(total_c))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
                 .addContainerGap())
@@ -283,6 +370,93 @@ public class Viewspending extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void search_sActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_sActionPerformed
+        // TODO add your handling code here:
+
+        java.sql.Date from = new java.sql.Date(Text_Date_from_s.getDate().getTime());
+        java.sql.Date to = new java.sql.Date(Text_Date_to_s.getDate().getTime());
+
+        try {
+            dtm.setRowCount(0);
+            PreparedStatement st = con.prepareStatement("select spending_date, category, amount from spending where spending_date >= ? and spending_date <= ? order by spending_date asc");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String date_from = dateFormat.format(Text_Date_from_s.getDate());
+
+            String date_to = dateFormat.format(Text_Date_to_s.getDate());
+
+            st.setString(1, date_from);
+            st.setString(2, date_to);
+
+            ResultSet rs = st.executeQuery();
+
+            double total = 0;
+            while (rs.next()) {
+                double t = rs.getDouble(3);
+                total += t;
+                String date = dateFormat.format(rs.getDate(1));
+                dtm.addRow(new Object[]{date, rs.getString(2), rs.getDouble(3)});
+            }
+            Table_s.setModel(dtm);
+            total_s.setText(total + "");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error In Search s");
+        }
+
+    }//GEN-LAST:event_search_sActionPerformed
+
+    private void comboBox_categoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBox_categoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBox_categoryActionPerformed
+
+    private void search_cActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_cActionPerformed
+        // TODO add your handling code here:
+
+        java.sql.Date from = new java.sql.Date(Text_Date_from_c.getDate().getTime());
+        java.sql.Date to = new java.sql.Date(Text_Date_to_c.getDate().getTime());
+
+        try {
+            String category = comboBox_category.getSelectedItem().toString();
+            dtm.setRowCount(0);
+            PreparedStatement st = con.prepareStatement("select spending_date, category, amount from spending where spending_date >= ? and spending_date <= ? and category = ? order by spending_date asc");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String date_from = dateFormat.format(Text_Date_from_c.getDate());
+
+            String date_to = dateFormat.format(Text_Date_to_c.getDate());
+
+            st.setString(1, date_from);
+            st.setString(2, date_to);
+            st.setString(3, category);
+
+            ResultSet rs = st.executeQuery();
+
+            double total = 0;
+            while (rs.next()) {
+                double t = rs.getDouble(3);
+                total += t;
+                String date = dateFormat.format(rs.getDate(1));
+                dtm.addRow(new Object[]{date, rs.getString(2), rs.getDouble(3)});
+            }
+            Table_c.setModel(dtm);
+            total_c.setText(total + "");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error In Search c");
+        }
+    }//GEN-LAST:event_search_cActionPerformed
+
+    private void Text_Date_from_sPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_Text_Date_from_sPropertyChange
+        // TODO add your handling code here:
+        Text_Date_to_s.setSelectableDateRange(Text_Date_from_s.getDate(), new java.util.Date());
+    }//GEN-LAST:event_Text_Date_from_sPropertyChange
+
+    private void Text_Date_to_sPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_Text_Date_to_sPropertyChange
+        // TODO add your handling code here:
+//        Text_Date_to_s.setSelectableDateRange(Text_Date_from_s.getDate(), new java.util.Date());
+    }//GEN-LAST:event_Text_Date_to_sPropertyChange
 
     /**
      * @param args the command line arguments
@@ -320,27 +494,31 @@ public class Viewspending extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JTable Table_c;
+    private javax.swing.JTable Table_s;
+    private com.toedter.calendar.JDateChooser Text_Date_from_c;
+    private com.toedter.calendar.JDateChooser Text_Date_from_s;
+    private com.toedter.calendar.JDateChooser Text_Date_to_c;
+    private com.toedter.calendar.JDateChooser Text_Date_to_s;
+    private javax.swing.JComboBox<String> comboBox_category;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JButton search_c;
+    private javax.swing.JButton search_s;
+    private javax.swing.JLabel totalAmount;
+    private javax.swing.JLabel total_c;
+    private javax.swing.JLabel total_s;
+    private javax.swing.JLabel totalamount;
     // End of variables declaration//GEN-END:variables
 }

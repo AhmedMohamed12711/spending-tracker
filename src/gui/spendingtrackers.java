@@ -23,7 +23,9 @@ public class spendingtrackers extends javax.swing.JFrame {
     public spendingtrackers() {
         initComponents();
         this.setResizable(false);
-
+        Text_date.setDate(new java.util.Date());
+//        Text_description.setText(".");
+        Text_amount.setText("0");
         this.setLocationRelativeTo(null);
         dtm.addColumn("ID");
         dtm.addColumn("Category");
@@ -308,6 +310,15 @@ public class spendingtrackers extends javax.swing.JFrame {
 
         Total_amount.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
         Total_amount.setText("0");
+        Total_amount.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                Total_amountAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -337,7 +348,7 @@ public class spendingtrackers extends javax.swing.JFrame {
             }
         });
 
-        jMenu3.setText("Master");
+        jMenu3.setText("Actions");
 
         View_spending.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_DOWN_MASK));
         View_spending.setText("View all Spending");
@@ -389,9 +400,6 @@ public class spendingtrackers extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -403,6 +411,9 @@ public class spendingtrackers extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -435,7 +446,7 @@ public class spendingtrackers extends javax.swing.JFrame {
         String category = category_Combobox.getSelectedItem().toString();
         String descriptonin = Text_description.getText();
 
-        if (date != null && amount != 0 && !category.isEmpty()) {
+        if (amount != 0 && !category.isEmpty() && !Text_description.getText().isEmpty()) {
             try {
 //                dtm.setRowCount(0);
                 PreparedStatement st = con.prepareStatement("insert into spending (category, spending_date, amount, description) values(?, ?, ?, ?) ");
@@ -455,6 +466,8 @@ public class spendingtrackers extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error In Add");
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Missed Data");
         }
     }//GEN-LAST:event_Add_btnActionPerformed
 
@@ -606,6 +619,10 @@ public class spendingtrackers extends javax.swing.JFrame {
     private void About_ProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_About_ProjectActionPerformed
         // TODO add your handling code here
     }//GEN-LAST:event_About_ProjectActionPerformed
+
+    private void Total_amountAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_Total_amountAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Total_amountAncestorAdded
 
     /**
      * @param args the command line arguments
