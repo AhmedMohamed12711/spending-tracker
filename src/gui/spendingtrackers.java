@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
 import java.text.ParseException;
 import javax.swing.table.*;
 
@@ -98,7 +99,6 @@ public class spendingtrackers extends javax.swing.JFrame {
         Add_new_category_btn = new javax.swing.JButton();
         Add_btn = new javax.swing.JButton();
         Text_date = new com.toedter.calendar.JDateChooser();
-        Refresh_btn = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         Text_description = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -170,6 +170,20 @@ public class spendingtrackers extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Category:");
 
+        category_Combobox.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                category_ComboboxMouseDragged(evt);
+            }
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                category_ComboboxMouseMoved(evt);
+            }
+        });
+        category_Combobox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                category_ComboboxMouseClicked(evt);
+            }
+        });
+
         Add_new_category_btn.setText("Add New Catgory");
         Add_new_category_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,16 +201,11 @@ public class spendingtrackers extends javax.swing.JFrame {
 
         Text_date.setDateFormatString("yyyy-MM-dd");
 
-        Refresh_btn.setText("Refresh");
-        Refresh_btn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Refresh_btnActionPerformed(evt);
-            }
-        });
-
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Description:");
+
+        Text_description.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -220,8 +229,7 @@ public class spendingtrackers extends javax.swing.JFrame {
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Text_description)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Refresh_btn)))
+                        .addGap(84, 84, 84)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(Add_new_category_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
@@ -250,14 +258,13 @@ public class spendingtrackers extends javax.swing.JFrame {
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(Add_new_category_btn)
-                                    .addComponent(Refresh_btn)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 18, Short.MAX_VALUE))
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 19, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(2, 2, 2)
-                                .addComponent(Text_description, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(Text_description, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                                    .addComponent(Add_new_category_btn))
                                 .addContainerGap())))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -293,10 +300,19 @@ public class spendingtrackers extends javax.swing.JFrame {
         jScrollPane1.setViewportView(Table);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
-        jLabel5.setText("this month sepending:");
+        jLabel5.setText("Table Data:");
 
-        Remove_btn.setBackground(new java.awt.Color(255, 51, 0));
         Remove_btn.setText("Remove");
+        Remove_btn.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                Remove_btnMouseMoved(evt);
+            }
+        });
+        Remove_btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                Remove_btnMouseExited(evt);
+            }
+        });
         Remove_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Remove_btnActionPerformed(evt);
@@ -305,10 +321,10 @@ public class spendingtrackers extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI Emoji", 0, 18)); // NOI18N
         jLabel6.setText("Total Amount:");
 
-        Total_amount.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        Total_amount.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); // NOI18N
         Total_amount.setText("0");
         Total_amount.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
@@ -326,9 +342,9 @@ public class spendingtrackers extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Total_amount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Total_amount, javax.swing.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -340,8 +356,17 @@ public class spendingtrackers extends javax.swing.JFrame {
                     .addComponent(Total_amount, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        Update_btn.setBackground(new java.awt.Color(0, 255, 0));
         Update_btn.setText("Update");
+        Update_btn.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                Update_btnMouseMoved(evt);
+            }
+        });
+        Update_btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                Update_btnMouseExited(evt);
+            }
+        });
         Update_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Update_btnActionPerformed(evt);
@@ -350,7 +375,7 @@ public class spendingtrackers extends javax.swing.JFrame {
 
         jMenu3.setText("Actions");
 
-        View_spending.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_DOWN_MASK));
+        View_spending.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         View_spending.setText("View all Spending");
         View_spending.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -359,7 +384,7 @@ public class spendingtrackers extends javax.swing.JFrame {
         });
         jMenu3.add(View_spending);
 
-        View_category.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        View_category.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_DOWN_MASK));
         View_category.setText("Add/View Category");
         View_category.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -476,11 +501,6 @@ public class spendingtrackers extends javax.swing.JFrame {
         new category().setVisible(true);
     }//GEN-LAST:event_Add_new_category_btnActionPerformed
 
-    private void Refresh_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Refresh_btnActionPerformed
-        // TODO add your handling code here:
-        fillComboBox();
-    }//GEN-LAST:event_Refresh_btnActionPerformed
-
     private void Remove_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Remove_btnActionPerformed
         // TODO add your handling code here:
         if (Table.getSelectedRow() != -1) {
@@ -562,32 +582,6 @@ public class spendingtrackers extends javax.swing.JFrame {
         Text_amount.setText(Table.getValueAt(Table.getSelectedRow(), 3).toString());
         Text_description.setText(Table.getValueAt(Table.getSelectedRow(), 4).toString());
 
-        /*Object dateObject = Table.getValueAt(Table.getSelectedRow(), 1);
-        if (dateObject != null) {
-            String dateString = dateObject.toString();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                java.util.Date date = dateFormat.parse(dateString);
-                Text_date.setDate(date);
-            } catch (ParseException e) {
-                JOptionPane.showMessageDialog(null, "Error in TableMouseClicked Date");
-            }
-        }
-
-        Object categoryObject = Table.getValueAt(Table.getSelectedRow(), 2);
-        if (categoryObject != null) {
-            category_Combobox.setSelectedItem(categoryObject);
-        }
-
-        Object amountObject = Table.getValueAt(Table.getSelectedRow(), 3);
-        if (amountObject != null) {
-            Text_amount.setText(amountObject.toString());
-        }
-
-        Object descriptionObject = Table.getValueAt(Table.getSelectedRow(), 4);
-        if (descriptionObject != null) {
-            Text_description.setText(descriptionObject.toString());
-        }*/
 
     }//GEN-LAST:event_TableMouseClicked
 
@@ -623,6 +617,39 @@ public class spendingtrackers extends javax.swing.JFrame {
     private void Total_amountAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_Total_amountAncestorAdded
         // TODO add your handling code here:
     }//GEN-LAST:event_Total_amountAncestorAdded
+
+    private void category_ComboboxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_category_ComboboxMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_category_ComboboxMouseClicked
+
+    private void category_ComboboxMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_category_ComboboxMouseDragged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_category_ComboboxMouseDragged
+
+    private void category_ComboboxMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_category_ComboboxMouseMoved
+        // TODO add your handling code here:
+        fillComboBox();
+    }//GEN-LAST:event_category_ComboboxMouseMoved
+
+    private void Remove_btnMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Remove_btnMouseMoved
+        // TODO add your handling code here:
+        Remove_btn.setBackground(Color.red);
+    }//GEN-LAST:event_Remove_btnMouseMoved
+
+    private void Remove_btnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Remove_btnMouseExited
+        // TODO add your handling code here:
+        Remove_btn.setBackground(Color.white);
+    }//GEN-LAST:event_Remove_btnMouseExited
+
+    private void Update_btnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Update_btnMouseExited
+        // TODO add your handling code here:
+        Update_btn.setBackground(Color.white);
+    }//GEN-LAST:event_Update_btnMouseExited
+
+    private void Update_btnMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Update_btnMouseMoved
+        // TODO add your handling code here:
+        Update_btn.setBackground(Color.green);
+    }//GEN-LAST:event_Update_btnMouseMoved
 
     /**
      * @param args the command line arguments
@@ -664,7 +691,6 @@ public class spendingtrackers extends javax.swing.JFrame {
     private javax.swing.JButton Add_btn;
     private javax.swing.JButton Add_new_category_btn;
     private javax.swing.JMenuItem Exit;
-    private javax.swing.JButton Refresh_btn;
     private javax.swing.JButton Remove_btn;
     private javax.swing.JTable Table;
     private javax.swing.JTextField Text_amount;

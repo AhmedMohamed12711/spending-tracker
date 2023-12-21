@@ -153,16 +153,37 @@ public class category extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(Table);
 
-        Delete_btn.setBackground(new java.awt.Color(255, 0, 0));
         Delete_btn.setText("Delete");
+        Delete_btn.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                Delete_btnMouseDragged(evt);
+            }
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                Delete_btnMouseMoved(evt);
+            }
+        });
+        Delete_btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                Delete_btnMouseExited(evt);
+            }
+        });
         Delete_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Delete_btnActionPerformed(evt);
             }
         });
 
-        Update_btn.setBackground(new java.awt.Color(102, 255, 0));
         Update_btn.setText("Update");
+        Update_btn.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                Update_btnMouseMoved(evt);
+            }
+        });
+        Update_btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                Update_btnMouseExited(evt);
+            }
+        });
         Update_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Update_btnActionPerformed(evt);
@@ -331,6 +352,34 @@ public class category extends javax.swing.JFrame {
         Clear_btn.setBackground(Color.red);
     }//GEN-LAST:event_Clear_btnMouseDragged
 
+    private void Delete_btnMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Delete_btnMouseMoved
+        // TODO add your handling code here:
+        
+        Delete_btn.setBackground(Color.red);
+    }//GEN-LAST:event_Delete_btnMouseMoved
+
+    private void Delete_btnMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Delete_btnMouseDragged
+        // TODO add your handling code here:
+//        Delete_btn.setBackground(Color.red);
+    }//GEN-LAST:event_Delete_btnMouseDragged
+
+    private void Delete_btnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Delete_btnMouseExited
+        // TODO add your handling code here:
+        Delete_btn.setBackground(Color.white);
+    }//GEN-LAST:event_Delete_btnMouseExited
+
+    private void Update_btnMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Update_btnMouseMoved
+        // TODO add your handling code here:
+        Update_btn.setBackground(Color.green);
+    }//GEN-LAST:event_Update_btnMouseMoved
+
+    private void Update_btnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Update_btnMouseExited
+        // TODO add your handling code here:
+        Update_btn.setBackground(Color.white);
+    }//GEN-LAST:event_Update_btnMouseExited
+
+    
+    
     /**
      * @param args the command line arguments
      */
